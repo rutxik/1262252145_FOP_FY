@@ -103,7 +103,7 @@ void InitializeUserProfile(char username[]) {
     user.books_issued = 0;
 
     // Load user data from user_data.txt
-    FILE *ufile = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "r");
+    FILE *ufile = fopen("data\\user_data.txt", "r");
     if(ufile != NULL) {
         char uname[50], upass[50], ucollege[100], ubranch[100];
         int uage, upay, umonths, udeposit;
@@ -125,7 +125,7 @@ void InitializeUserProfile(char username[]) {
     }
 
     // Load this user's issued books from issued_books.txt
-    FILE *issued_file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt", "r");
+    FILE *issued_file = fopen("data\\issued_books.txt", "r");
     if(issued_file != NULL) {
         char uname[50], book_name[50], author[50], issue_date[20], due_date[20], status[20];
         char line[300];
@@ -148,7 +148,7 @@ void InitializeUserProfile(char username[]) {
     }
 
     // Derive books_read by counting this user's "returned" lines
-    FILE *rfile = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt", "r");
+    FILE *rfile = fopen("data\\issued_books.txt", "r");
     if(rfile != NULL) {
         char uname[50], book_name[50], author[50], issue_date[20], due_date[20], status[10], return_date[20];
         char line[300];
@@ -339,14 +339,14 @@ void IssueBook()
     user.books_issued++;
     
     // Add to issued_books.txt file
-    FILE *issued_file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt", "a");
+    FILE *issued_file = fopen("data\\issued_books.txt", "a");
     if(issued_file != NULL) {
         fprintf(issued_file, "%s,%s,%s,%s,%s,issued\n", user.name, book_name, author, issue_date, due_date);
         fclose(issued_file);
     }
     
     // Update dataset file to persist quantity change
-    FILE *dataset_file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\FOP Assignment Sem 2 DATASET.txt", "w");
+    FILE *dataset_file = fopen("data\\FOP Assignment Sem 2 DATASET.txt", "w");
     if(dataset_file != NULL) {
         for(int i = 0; i < total_records; i++) {
             fprintf(dataset_file, "%s,%s,%s,%s,%s,%d\n",
@@ -435,8 +435,8 @@ void ReturnBook()
     user.books_issued--;
     
     // Update issued_books.txt - change this user's book status from issued to returned
-    FILE *issued_file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt", "r");
-    FILE *temp_file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\temp_issued.txt", "w");
+    FILE *issued_file = fopen("data\\issued_books.txt", "r");
+    FILE *temp_file = fopen("data\\temp_issued.txt", "w");
 
     if(issued_file != NULL && temp_file != NULL) {
         char line[300];
@@ -461,13 +461,13 @@ void ReturnBook()
         fclose(issued_file);
         fclose(temp_file);
 
-        remove("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt");
-        rename("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\temp_issued.txt",
-               "C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt");
+        remove("data\\issued_books.txt");
+        rename("data\\temp_issued.txt",
+               "data\\issued_books.txt");
     }
     
     // Update dataset file to persist quantity change
-    FILE *dataset_file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\FOP Assignment Sem 2 DATASET.txt", "w");
+    FILE *dataset_file = fopen("data\\FOP Assignment Sem 2 DATASET.txt", "w");
     if(dataset_file != NULL) {
         for(int i = 0; i < total_records; i++) {
             fprintf(dataset_file, "%s,%s,%s,%s,%s,%d\n",
@@ -540,7 +540,7 @@ void DonateBook()
     }
     
     // Update the file
-    FILE *file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\FOP Assignment Sem 2 DATASET.txt", "w");
+    FILE *file = fopen("data\\FOP Assignment Sem 2 DATASET.txt", "w");
     if(file == NULL) {
         printf("Error updating file.\n");
         return;
@@ -741,7 +741,7 @@ void CreateUser() {
     upass[strcspn(upass, "\n")] = 0;
 
     // Check if username already exists
-    FILE *check = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "r");
+    FILE *check = fopen("data\\user_data.txt", "r");
     if(check != NULL) {
         char existing_name[50], line[300];
         while(fgets(line, 300, check)) {
@@ -776,18 +776,18 @@ void CreateUser() {
     printf("Enter Deposit Amount: ");
     udeposit = readInt();
 
-    FILE *ufile = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "r");
+    FILE *ufile = fopen("data\\user_data.txt", "r");
     if(ufile != NULL) {
         fseek(ufile, -1, SEEK_END);
         int last = fgetc(ufile);
         fclose(ufile);
         if(last != '\n') {
-            FILE *fix = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "a");
+            FILE *fix = fopen("data\\user_data.txt", "a");
             fprintf(fix, "\n");
             fclose(fix);
         }
     }
-    ufile = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "a");
+    ufile = fopen("data\\user_data.txt", "a");
     if(ufile != NULL) {
         fprintf(ufile, "%s,%s,%d,%s,%s,%d,%d,%d\n", uname, upass, uage, ucollege, ubranch, upay, umonths, udeposit);
         fclose(ufile);
@@ -816,7 +816,7 @@ void DeleteUser() {
     int found = 0;
 
     // First check if username AND password match
-    FILE *check = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "r");
+    FILE *check = fopen("data\\user_data.txt", "r");
     if(check != NULL) {
         char line[300], existing_name[50], existing_pass[50];
         while(fgets(line, 300, check)) {
@@ -835,8 +835,8 @@ void DeleteUser() {
     }
 
     // Remove from user_data.txt
-    FILE *ufile = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "r");
-    FILE *temp = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\temp_users.txt", "w");
+    FILE *ufile = fopen("data\\user_data.txt", "r");
+    FILE *temp = fopen("data\\temp_users.txt", "w");
     if(ufile != NULL && temp != NULL) {
         char line[300], existing_name[50], existing_pass[50];
         while(fgets(line, 300, ufile)) {
@@ -848,14 +848,14 @@ void DeleteUser() {
         }
         fclose(ufile);
         fclose(temp);
-        remove("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt");
-        rename("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\temp_users.txt",
-               "C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt");
+        remove("data\\user_data.txt");
+        rename("data\\temp_users.txt",
+               "data\\user_data.txt");
     }
 
     // Remove their entries from issued_books.txt
-    FILE *ifile = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt", "r");
-    FILE *itemp = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\temp_issued.txt", "w");
+    FILE *ifile = fopen("data\\issued_books.txt", "r");
+    FILE *itemp = fopen("data\\temp_issued.txt", "w");
     if(ifile != NULL && itemp != NULL) {
         char line[300], existing[50];
         while(fgets(line, 300, ifile)) {
@@ -866,9 +866,9 @@ void DeleteUser() {
         }
         fclose(ifile);
         fclose(itemp);
-        remove("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt");
-        rename("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\temp_issued.txt",
-               "C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\issued_books.txt");
+        remove("data\\issued_books.txt");
+        rename("data\\temp_issued.txt",
+               "data\\issued_books.txt");
     }
 
     printf("User '%s' deleted successfully.\n", uname);
@@ -881,7 +881,7 @@ void DeleteUser() {
 int main()
 {
     FILE *file;
-    file = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\FOP Assignment Sem 2 DATASET.txt", "r");
+    file = fopen("data\\FOP Assignment Sem 2 DATASET.txt", "r");
     
     if(file == NULL)
     {
@@ -981,7 +981,7 @@ int main()
         scanf("%49s", password);
 
         // Check credentials against user_data.txt
-        FILE *ufile = fopen("C:\\Users\\kaust\\Downloads\\Telegram Desktop\\Rutvik\\CODING\\FOP SEM mid 2nd MiniProj\\user_data.txt", "r");
+        FILE *ufile = fopen("data\\user_data.txt", "r");
         if(ufile != NULL) {
             char uname[50], upass[50], rest[300];
             while(fscanf(ufile, "%49[^,],%49[^,],%299[^\n]\n", uname, upass, rest) == 3) {
